@@ -1,0 +1,32 @@
+version: '3.8'
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: teslacharge-redis
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+
+  backend:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+    container_name: teslacharge-backend
+    ports:
+      - "8080:8080"
+    depends_on:
+      - redis
+    environment:
+      - SUPABASE_DB_URL=jdbc:postgresql://aws-0-eu-central-1.pooler.supabase.com:6543/postgres?sslmode=require
+      - SUPABASE_DB_USER=postgres.fkcywhuzovaaxadmemnf
+      - SUPABASE_DB_PASSWORD=[REPLACE_WITH_DB_PASSWORD]
+      - SPRING_PROFILES_ACTIVE=dev
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    restart: unless-stopped
+
+volumes:
+  redis_data:

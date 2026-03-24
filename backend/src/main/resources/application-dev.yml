@@ -1,0 +1,33 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://aws-0-eu-central-1.pooler.supabase.com:6543/postgres?sslmode=require
+    username: postgres.fkcywhuzovaaxadmemnf
+    password: "[REPLACE_WITH_DB_PASSWORD]"
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  mail:
+    host: smtp.mailtrap.io
+    port: 2525
+    username: "[REPLACE_WITH_SMTP_USER]"
+    password: "[REPLACE_WITH_SMTP_PASS]"
+
+app:
+  jwt:
+    secret: "[REPLACE_WITH_AT_LEAST_256_BIT_KEY]"
+    expiry-ms: 3600000
+    refresh-expiry-ms: 604800000
+  otp:
+    length: 6
+    expiry-minutes: 10
+    max-attempts: 3
+  whatsapp:
+    api-url: https://graph.facebook.com/v17.0/
+    token: "[REPLACE_WITH_WHATSAPP_TOKEN]"
+    from-number: "[REPLACE_WITH_WHATSAPP_NUMBER]"
+  vin:
+    validation-api: https://vpic.nhtsa.dot.gov/api/vehicles/DecodeVin
