@@ -40,7 +40,7 @@ The system handles:
 
 ### 🔐 Authentication
 - OTP-based passwordless login (email or WhatsApp delivery)
-- Two-level identity verification: personal credentials + VIN (vehicle chassis number)
+- identity verification: personal credentials + VIN (vehicle chassis number)
 - Secure JWT access tokens (1h) + refresh tokens (7d)
 - Token stored in device's native secure storage (Keychain / Keystore)
 
