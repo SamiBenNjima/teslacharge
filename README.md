@@ -70,123 +70,23 @@ The system handles:
   - Select/deselect active vehicle
   - Remove a vehicle link
   - Transfer ownership (sell) to another registered user
-- Change OTP delivery preference (email / WhatsApp)
-
----
-
-## 🛠️ Tech Stack
+- Change OTP delivery ## 🛠️ Tech Stack
 
 | Layer | Technology |
 |---|---|
-| **Mobile Frontend** | Angular 17 + Ionic 7 + Capacitor 5 |
-| **Maps** | Google Maps JavaScript SDK |
-| **Backend API** | Spring Boot 3.2 (Java 21) |
-| **ORM** | Spring Data JPA + Hibernate |
-| **Security** | Spring Security + JJWT (RS256) |
-| **Database** | Supabase — PostgreSQL 15 with PostGIS |
-| **Auth Base** | Supabase Auth + Custom OTP layer |
-| **OTP — Email** | Spring Boot Mail (SMTP) |
-| **OTP — WhatsApp** | WhatsApp Business Cloud API |
-| **Cache / Rate Limit** | Redis 7 |
-| **VIN Validation** | NHTSA vPIC API |
-| **Containerization** | Docker + Docker Compose |
-| **CI/CD** | GitHub Actions |
+| **Mobile Frontend** | React 19 + Vite + TypeScript |
+| **Styling** | Tailwind CSS v4 |
+| **Database & Auth** | Supabase (PostgreSQL 17 + PostGREST) |
+| **Backend API** | Spring Boot 4.x (JPA / Hibernate) |
+| **Icons** | Google Material Symbols |
 
 ---
 
 ## 🏛️ Architecture
 
-```
-┌──────────────────────────────────────────┐
-│        Angular + Ionic Mobile App        │
-│  Home  │  Map  │  Reservations  │ Profile │
-└──────────────────┬───────────────────────┘
-                   │ HTTPS + JWT
-┌──────────────────▼───────────────────────┐
-│          Spring Boot REST API            │
-│   Auth · Driver · Vehicle · Station ·   │
-│   Reservation · OTP · VIN Validation    │
-└──────────────────┬───────────────────────┘
-                   │
-┌──────────────────▼───────────────────────┐
-│     Supabase (PostgreSQL + Auth + RLS)   │
-└──────────────────────────────────────────┘
-        │                        │
- WhatsApp Business API       Email SMTP
-       (OTP)                   (OTP)
-```
-
----
-
-## 🚀 Getting Started
-
-### Prerequisites
-
-```bash
-# Runtime
-node >= 20.x
-java >= 21
-maven >= 3.9
-docker >= 24.x
-docker-compose >= 2.x
-
-# Global CLIs
-npm install -g @ionic/cli @angular/cli
-```
-
-### 1. Clone the Repository
-
-```bash
-git clone https://github.com/your-org/teslacharge.git
-cd teslacharge
-```
-
-### 2. Configure Environment Variables
-
-```bash
-# Backend
-cp backend/src/main/resources/application-dev.yml.example \
-   backend/src/main/resources/application-dev.yml
-# Edit application-dev.yml with your Supabase, SMTP, WhatsApp, JWT secrets
-
-# Frontend
-cp frontend/src/environments/environment.example.ts \
-   frontend/src/environments/environment.ts
-# Edit with your API URL, Google Maps key, Supabase config
-```
-
-### 3. Start Infrastructure
-
-```bash
-cd infra
-docker-compose up -d    # Starts Supabase local + Redis
-```
-
-### 4. Apply Database Migrations
-
-```bash
-supabase db push        # Applies all SQL in /infra/supabase/migrations/
-```
-
-### 5. Run the Backend
-
-```bash
-cd backend
-mvn spring-boot:run -Dspring-boot.run.profiles=dev
-# API available at http://localhost:8080
-# Swagger UI at http://localhost:8080/swagger-ui.html
-```
-
-### 6. Run the Frontend
-
-```bash
-cd frontend
-npm install
-ionic serve                  # Browser dev server
-# OR
-ionic cap run android        # On Android emulator/device
-ionic cap run ios            # On iOS simulator/device
-```
+The app follows a modern dual-path architecture:
+1. **Frontend-to-Supabase**: The React app communicates directly with Supabase via `@supabase/supabase-js` for real-time data fetching and identity management.
+2. **Backend Services**: The Spring Boot backend provides a robust entity layer for complex business logic (OTP, VIN validation, ownership transfers) and scheduled tasks.
 
 ---
 
@@ -194,15 +94,23 @@ ionic cap run ios            # On iOS simulator/device
 
 ```
 teslacharge/
-├── frontend/                # Angular + Ionic app
-│   └── src/app/
-│       ├── core/            # Guards, interceptors, core services
-│       ├── shared/          # Models, pipes, reusable components
-│       └── features/
-│           ├── auth/        # Sign-in, Sign-up, OTP screens
-│           ├── home/        # Dashboard tab
-│           ├── map/         # Map + station search tab
-│           ├── reservations/# Booking management tab
+├── frontend/                # React + Vite + Tailwind CSS v4
+│   ├── src/
+│   │   ├── components/      # Shared UI (BottomNav, etc.)
+│   │   ├── lib/             # Supabase client & API services
+│   │   ├── pages/           # Home, Map, Reservations, Profile
+│   │   └── index.css        # Tailwind v4 @theme design system
+│
+├── backend/                 # Spring Boot application
+│   └── src/main/java/com/example/backend/
+│       ├── controller/      # REST Endpoints
+│       ├── entity/          # JPA Entities (Driver, Vehicle, etc.)
+│       ├── repository/      # Spring Data Repositories
+│       └── service/         # Business Logic
+│
+└── infra/                   # Infrastructure configuration
+```
+Booking management tab
 │           └── profile/     # Profile + vehicle management tab
 │
 ├── backend/                 # Spring Boot application

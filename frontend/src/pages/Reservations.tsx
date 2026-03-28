@@ -1,165 +1,167 @@
-/* ──────────────────────────────────────────────
-   Reservations Page — Upcoming & Past
-   Ported from Stitch "Reservations List – State A"
-   ────────────────────────────────────────────── */
+import React, { useEffect, useState } from 'react';
+import { api } from '../lib/api';
 
-import { useState } from 'react'
+const Reservations: React.FC = () => {
+  const driverId = 'd0000000-0000-0000-0000-000000000001'; // Sami
+  const [activeTab, setActiveTab] = useState<'upcoming' | 'past'>('upcoming');
+  const [reservations, setReservations] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-type Reservation = {
-  id: number
-  station: string
-  address: string
-  date: string
-  time: string
-  duration: string
-  status: 'Confirmed' | 'Completed' | 'Cancelled'
-  connector: string
-}
+  const loadReservations = async () => {
+    setLoading(true);
+    try {
+      const data = await api.getReservations(driverId);
+      setReservations(data);
+    } catch (err) {
+      console.error('Error loading reservations:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-const upcomingData: Reservation[] = [
-  {
-    id: 1,
-    station: 'DTLA Grand Ave',
-    address: '350 S Grand Ave, Los Angeles',
-    date: '26 MAR 2026',
-    time: '10:00 AM',
-    duration: '45 min',
-    status: 'Confirmed',
-    connector: 'V3 · Stall #4',
-  },
-  {
-    id: 2,
-    station: 'Santa Monica V3',
-    address: '1234 Ocean Ave, Santa Monica',
-    date: '29 MAR 2026',
-    time: '2:30 PM',
-    duration: '30 min',
-    status: 'Confirmed',
-    connector: 'V3 · Stall #7',
-  },
-]
+  useEffect(() => {
+    loadReservations();
+  }, []);
 
-const pastData: Reservation[] = [
-  {
-    id: 3,
-    station: 'Culver City North',
-    address: '9000 Culver Blvd, Culver City',
-    date: '18 MAR 2026',
-    time: '11:15 AM',
-    duration: '38 min',
-    status: 'Completed',
-    connector: 'V3 · Stall #2',
-  },
-  {
-    id: 4,
-    station: 'Malibu Beach',
-    address: '22000 PCH, Malibu',
-    date: '14 MAR 2026',
-    time: '4:00 PM',
-    duration: '55 min',
-    status: 'Completed',
-    connector: 'V2 · Stall #11',
-  },
-  {
-    id: 5,
-    station: 'Echo Park East',
-    address: '1500 Echo Park Ave',
-    date: '10 MAR 2026',
-    time: '9:00 AM',
-    duration: '25 min',
-    status: 'Cancelled',
-    connector: 'V3 · Stall #1',
-  },
-]
+  const handleCancel = async (id: string) => {
+    if (!window.confirm('Voulez-vous vraiment annuler cette réservation ?')) return;
+    try {
+      await api.cancelReservation(id);
+      await loadReservations();
+    } catch (err) {
+      alert("Erreur lors de l'annulation");
+    }
+  };
 
-const statusStyles: Record<string, string> = {
-  Confirmed: 'bg-[#4CAF50]/15 text-[#4CAF50]',
-  Completed: 'bg-tertiary/15 text-tertiary',
-  Cancelled: 'bg-error/15 text-error',
-}
+  const filteredReservations = reservations.filter(res => {
+    if (activeTab === 'upcoming') {
+      return res.status === 'CONFIRMED' || res.status === 'PENDING' || res.status === 'ACTIVE';
+    } else {
+      return res.status === 'COMPLETED' || res.status === 'CANCELLED' || res.status === 'NO_SHOW';
+    }
+  });
 
-export default function Reservations() {
-  const [tab, setTab] = useState<'upcoming' | 'past'>('upcoming')
-  const items = tab === 'upcoming' ? upcomingData : pastData
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#131313] flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#e82127]"></div>
+      </div>
+    );
+  }
 
   return (
-    <>
-      {/* ── Header ── */}
-      <div className="sticky top-0 z-50 bg-[#131313] px-6 pt-4 pb-3">
-        <h1 className="font-headline text-[1.5rem] font-bold tracking-tight">Reservations</h1>
-      </div>
+    <div className="min-h-screen bg-[#131313] text-white pb-24 px-6 pt-12 font-['Inter']">
+      <h1 className="text-3xl font-black mb-8 tracking-tighter">Mes Réservations</h1>
 
       {/* ── Tabs ── */}
-      <div className="flex gap-2 px-6 mt-2">
-        {(['upcoming', 'past'] as const).map((t) => (
-          <button
-            key={t}
-            onClick={() => setTab(t)}
-            className={`px-5 py-2 text-[0.6875rem] font-bold uppercase tracking-widest rounded-sm transition-all ${
-              tab === t
-                ? 'bg-primary-container text-on-primary-container'
-                : 'bg-surface-container text-on-surface-variant hover:text-primary'
-            }`}
-          >
-            {t === 'upcoming' ? `Upcoming (${upcomingData.length})` : `Past (${pastData.length})`}
-          </button>
-        ))}
+      <div className="flex bg-[#1c1c1c] p-1.5 rounded-2xl mb-8 border border-white/5">
+        <button
+          onClick={() => setActiveTab('upcoming')}
+          className={`flex-1 py-3 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] transition-all ${
+            activeTab === 'upcoming' ? 'bg-[#252525] text-[#e82127] shadow-lg border border-white/5' : 'text-gray-500'
+          }`}
+        >
+          À Venir
+        </button>
+        <button
+          onClick={() => setActiveTab('past')}
+          className={`flex-1 py-3 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] transition-all ${
+            activeTab === 'past' ? 'bg-[#252525] text-[#e82127] shadow-lg border border-white/5' : 'text-gray-500'
+          }`}
+        >
+          Passées
+        </button>
       </div>
 
-      {/* ── Reservation cards ── */}
-      <div className="px-6 mt-6 space-y-4 pb-4">
-        {items.map((res) => (
-          <div key={res.id} className="bg-surface-container rounded-lg p-5 space-y-4">
-            {/* Top row */}
-            <div className="flex justify-between items-start">
-              <div>
-                <h3 className="font-bold text-base">{res.station}</h3>
-                <p className="text-xs text-on-surface-variant/60 mt-0.5">{res.address}</p>
-              </div>
-              <span
-                className={`text-[0.6875rem] font-bold uppercase tracking-wider px-2.5 py-1 rounded-sm ${
-                  statusStyles[res.status]
-                }`}
-              >
-                {res.status}
-              </span>
-            </div>
+      {/* ── List ── */}
+      <div className="space-y-6">
+        {filteredReservations.length > 0 ? (
+          filteredReservations.map((res: any) => (
+            <div key={res.id} className="bg-[#1c1c1c] border border-white/5 rounded-3xl overflow-hidden relative group">
+               {/* Accent Bar */}
+               <div className={`absolute top-0 left-0 w-1.5 h-full ${
+                 res.status === 'CONFIRMED' ? 'bg-[#e82127]' : 
+                 res.status === 'COMPLETED' ? 'bg-green-500' : 'bg-gray-700'
+               }`} />
 
-            {/* Details grid */}
-            <div className="grid grid-cols-3 gap-3">
-              {[
-                { label: 'Date', value: res.date },
-                { label: 'Time', value: res.time },
-                { label: 'Duration', value: res.duration },
-              ].map((d) => (
-                <div key={d.label} className="flex flex-col">
-                  <span className="text-[0.6875rem] uppercase font-bold text-on-surface-variant/40">
-                    {d.label}
-                  </span>
-                  <span className="font-semibold text-sm mt-0.5">{d.value}</span>
-                </div>
-              ))}
-            </div>
+               <div className="p-6">
+                 <div className="flex justify-between items-start mb-6">
+                   <div>
+                     <h3 className="text-xl font-bold tracking-tight mb-1">{res.stations?.name}</h3>
+                     <p className="text-xs text-gray-500 font-medium">{res.stations?.address}</p>
+                   </div>
+                   <span className={`px-4 py-1.5 rounded-sm text-[8px] font-black uppercase tracking-[0.2em] ${
+                     res.status === 'CONFIRMED' ? 'bg-[#e82127]/10 text-[#e82127]' :
+                     res.status === 'COMPLETED' ? 'bg-green-500/10 text-green-500' :
+                     'bg-white/5 text-gray-500'
+                   }`}>
+                     {res.status}
+                   </span>
+                 </div>
 
-            {/* Connector badge + actions */}
-            <div className="flex items-center justify-between">
-              <span className="text-[0.6875rem] font-bold text-on-surface-variant/40 bg-surface-container-highest px-3 py-1 rounded-sm">
-                {res.connector}
-              </span>
-              {res.status === 'Confirmed' && (
-                <div className="flex gap-2">
-                  <button className="text-[0.6875rem] font-bold uppercase tracking-widest text-error hover:underline">
-                    Cancel
-                  </button>
-                  <button className="bg-primary-container px-4 py-1.5 text-on-primary-container text-[0.6875rem] font-black uppercase tracking-[0.1em] rounded-sm hover:opacity-90 transition-opacity active:scale-95">
-                    Details
-                  </button>
-                </div>
-              )}
+                 <div className="grid grid-cols-2 gap-6 mb-8">
+                   <div className="flex items-center gap-3">
+                     <span className="material-symbols-outlined text-[#e82127] text-xl">calendar_today</span>
+                     <div>
+                       <p className="text-[8px] text-gray-500 uppercase font-black tracking-widest">Date</p>
+                       <p className="text-sm font-bold">{new Date(res.scheduled_start).toLocaleDateString()}</p>
+                     </div>
+                   </div>
+                   <div className="flex items-center gap-3">
+                     <span className="material-symbols-outlined text-[#e82127] text-xl">schedule</span>
+                     <div>
+                       <p className="text-[8px] text-gray-500 uppercase font-black tracking-widest">Heure</p>
+                       <p className="text-sm font-bold">{new Date(res.scheduled_start).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
+                     </div>
+                   </div>
+                   <div className="flex items-center gap-3">
+                     <span className="material-symbols-outlined text-[#e82127] text-xl">directions_car</span>
+                     <div>
+                       <p className="text-[8px] text-gray-500 uppercase font-black tracking-widest">Car</p>
+                       <p className="text-sm font-bold">{res.vehicles?.model}</p>
+                     </div>
+                   </div>
+                   <div className="flex items-center gap-3">
+                     <span className="material-symbols-outlined text-[#e82127] text-xl">pin</span>
+                     <div>
+                       <p className="text-[8px] text-gray-500 uppercase font-black tracking-widest">Plate</p>
+                       <p className="text-sm font-bold">{res.vehicles?.license_plate}</p>
+                     </div>
+                   </div>
+                 </div>
+
+                 {res.status === 'CONFIRMED' && (
+                   <div className="flex gap-3">
+                     <button className="flex-1 bg-white/5 border border-white/5 py-3.5 text-white text-[10px] font-black uppercase tracking-[0.2em] rounded-xl hover:bg-white/10 transition-colors active:scale-95">
+                       Détails
+                     </button>
+                     <button 
+                       onClick={() => handleCancel(res.id)}
+                       className="flex-1 bg-[#e82127] py-3.5 text-white text-[10px] font-black uppercase tracking-[0.2em] rounded-xl hover:bg-red-700 transition-colors active:scale-95 shadow-lg shadow-[#e82127]/20"
+                     >
+                       Annuler
+                     </button>
+                   </div>
+                 )}
+
+                 {res.status === 'COMPLETED' && (
+                   <button className="w-full bg-white/5 border border-white/5 py-3.5 text-white text-[10px] font-black uppercase tracking-[0.2em] rounded-xl hover:bg-white/10 transition-colors flex items-center justify-center gap-2">
+                     <span className="material-symbols-outlined text-sm">receipt_long</span>
+                     Voir Facture
+                   </button>
+                 )}
+               </div>
             </div>
+          ))
+        ) : (
+          <div className="py-20 text-center">
+            <span className="material-symbols-outlined text-gray-700 text-6xl mb-4">calendar_today</span>
+            <p className="text-gray-500 font-medium italic">Aucune réservation pour le moment.</p>
           </div>
-        ))}
+        )}
       </div>
-    </>
-  )
-}
+    </div>
+  );
+};
+
+export default Reservations;

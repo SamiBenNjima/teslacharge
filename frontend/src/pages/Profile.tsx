@@ -1,120 +1,130 @@
-/* ──────────────────────────────────────────────
-   Profile Page — User Settings & Vehicle
-   Ported from Stitch "Profile Overview"
-   ────────────────────────────────────────────── */
+import React, { useEffect, useState } from 'react';
+import { api } from '../lib/api';
 
-export default function Profile() {
-  const menuItems = [
-    { icon: 'directions_car', label: 'My Vehicles', desc: 'Manage connected vehicles' },
-    { icon: 'credit_card', label: 'Payment Methods', desc: 'Cards & billing info' },
-    { icon: 'history', label: 'Charging History', desc: 'Past sessions & receipts' },
-    { icon: 'notifications', label: 'Notifications', desc: 'Alert preferences' },
-    { icon: 'shield', label: 'Privacy & Security', desc: 'Password & data settings' },
-    { icon: 'help', label: 'Help & Support', desc: 'FAQs & contact us' },
-  ]
+const Profile: React.FC = () => {
+  const driverId = 'd0000000-0000-0000-0000-000000000001'; // Sami
+  const [profile, setProfile] = useState<any>(null);
+  const [vehicles, setVehicles] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadProfile() {
+      try {
+        const prof = await api.getDriverProfile(driverId);
+        setProfile(prof);
+        
+        // Fetch all vehicles for this driver
+        const { data: vData } = await (window as any).supabase
+          .from('driver_vehicles')
+          .select('*, vehicles(*)')
+          .eq('driver_id', driverId);
+        
+        setVehicles(vData?.map((v: any) => ({ ...v.vehicles, is_selected: v.is_selected })) || []);
+      } catch (err) {
+        console.error('Error loading profile:', err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadProfile();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#131313] flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#e82127]"></div>
+      </div>
+    );
+  }
 
   return (
-    <>
-      {/* ── Header ── */}
-      <div className="sticky top-0 z-50 bg-[#131313] px-6 pt-4 pb-3 flex justify-between items-center">
-        <h1 className="font-headline text-[1.5rem] font-bold tracking-tight">Profile</h1>
-        <button className="text-xs uppercase font-bold tracking-widest text-primary-container hover:underline">
-          Edit
-        </button>
+    <div className="min-h-screen bg-[#131313] text-white pb-24 px-6 pt-12 font-['Inter']">
+      {/* ── Profile Header ── */}
+      <div className="flex flex-col items-center mb-10">
+        <div className="w-28 h-28 rounded-full overflow-hidden border-4 border-[#e82127] shadow-2xl p-1 mb-6">
+          <img 
+             src={profile?.avatar_url || "https://images.unsplash.com/photo-1633332755192-727a05c4013d?w=150&h=150&fit=crop"} 
+             alt="Profile" 
+             className="w-full h-full object-cover rounded-full"
+          />
+        </div>
+        <h1 className="text-3xl font-black tracking-tighter">{profile?.first_name} {profile?.last_name}</h1>
+        <p className="text-gray-500 font-medium tracking-wide mt-1">{profile?.email}</p>
+        
+        <div className="flex gap-4 mt-6">
+           <button className="bg-[#e82127] px-8 py-3 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] shadow-lg shadow-[#e82127]/20 active:scale-95 transition-all">
+             Modifier Profil
+           </button>
+           <button className="bg-[#1c1c1c] border border-white/5 py-3 px-4 rounded-xl active:scale-95 transition-all">
+              <span className="material-symbols-outlined text-[#e82127]">share</span>
+           </button>
+        </div>
       </div>
 
-      <main className="px-6 space-y-8 mt-4 pb-4">
-        {/* ── User card ── */}
-        <section className="bg-surface-container rounded-xl p-6 flex items-center gap-5">
-          <div className="w-20 h-20 rounded-full overflow-hidden bg-surface-container-high flex-shrink-0">
-            <img
-              className="w-full h-full object-cover"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuC4kdDFwj3ZhkeZPYil23Tltp-80fdSD8otL2L7ivRmfnRZ28Ul2L0Yu8A4L9bTa0U_D66iS9f7V6ncZQUrZlsxNUU4TJ7_V6Kx-F6QAiPm14tHemMWQveFyf_UzSULfqAU4kAsgNL651QT7jyle8Guw9oZkYZliowuZyRFcXNZIDsFB9vJdL3Q86MjFUQPsAF_VzKStWjoX4BtG54pXuzMBLyvSZWF_F9c7rdNvJBK3XyfC0cc2Zfpu3VZPKp4IZAwx0nfkm26HII"
-              alt="User avatar"
-            />
-          </div>
-          <div>
-            <h2 className="text-xl font-bold tracking-tight">Karim Ben Njima</h2>
-            <p className="text-sm text-on-surface-variant/60 mt-0.5">karim.bennjima@email.com</p>
-            <div className="flex items-center gap-2 mt-2">
-              <span className="bg-primary-container/15 text-primary-container text-[0.6875rem] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-sm">
-                Premium
-              </span>
-              <span className="text-[0.6875rem] text-on-surface-variant/40">Member since 2024</span>
-            </div>
-          </div>
-        </section>
+      {/* ── Status Grid ── */}
+      <div className="grid grid-cols-2 gap-4 mb-10">
+        <div className="bg-[#1c1c1c] border border-white/5 rounded-3xl p-6 flex flex-col items-center">
+           <span className="text-gray-500 text-[10px] font-black uppercase tracking-widest mb-1">Inscrit le</span>
+           <span className="text-sm font-bold">{new Date(profile?.created_at).toLocaleDateString()}</span>
+        </div>
+        <div className="bg-[#1c1c1c] border border-white/5 rounded-3xl p-6 flex flex-col items-center">
+           <span className="text-gray-500 text-[10px] font-black uppercase tracking-widest mb-1">Status</span>
+           <span className="text-sm font-bold text-[#e82127] flex items-center gap-1">
+             <span className="w-2 h-2 rounded-full bg-[#e82127]"></span> Actif
+           </span>
+        </div>
+      </div>
 
-        {/* ── Vehicle snapshot ── */}
-        <section className="bg-surface-container rounded-xl p-6 space-y-4">
-          <div className="flex justify-between items-center">
-            <h3 className="text-sm font-bold uppercase tracking-widest text-on-surface-variant/50">
-              Active Vehicle
-            </h3>
-            <button className="text-xs font-bold text-primary-container uppercase tracking-widest">
-              Manage
-            </button>
-          </div>
-          <div className="flex items-center gap-4">
-            <div className="w-24 h-14 bg-surface-container-low rounded-lg flex items-center justify-center overflow-hidden">
-              <img
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuA3NS6FsxKAd8cXKTqMcRzlzrfY8ftwKVi6qTxqfgi3us6X2mD8lPayD-EYtUJ_tNgp2Li43Awq46g456nF5357az3RNUSA5QENNbJJfe12JRqpwjgZFTQddHDPpuW_dyQXD2NIo503lt8wHyw6Y4zTEyMm_8LrYgyN0afnOYB3eHbuzDV1wa25ByXF78rauDvF5vBtM61wx93BmoU-zVmijwxyLZtN-8pFIfx2i0j1VbzSGXQpbIjpK4L_zzA0HrwF1cyx_hbj-fY"
-                alt="Tesla Model 3"
-                className="w-full h-full object-cover"
-              />
-            </div>
-            <div>
-              <h4 className="font-bold">Model 3 Long Range</h4>
-              <p className="text-xs text-on-surface-variant/60 mt-0.5">VIN: ...A4F2 · NACS</p>
-            </div>
-          </div>
-        </section>
+      {/* ── Vehicles Section ── */}
+      <div className="mb-10">
+        <div className="flex justify-between items-end mb-8">
+          <h3 className="text-2xl font-black tracking-tighter">Mes Véhicules</h3>
+          <button className="text-[#e82127] text-[10px] font-black uppercase tracking-[0.2em] hover:underline">Ajouter</button>
+        </div>
 
-        {/* ── Stats summary ── */}
-        <section className="grid grid-cols-3 gap-3">
-          {[
-            { label: 'Sessions', value: '12' },
-            { label: 'Energy', value: '187 kWh' },
-            { label: 'Saved', value: '$58.20' },
-          ].map((s) => (
-            <div
-              key={s.label}
-              className="bg-surface-container-low p-4 rounded-lg text-center"
-            >
-              <div className="text-lg font-bold">{s.value}</div>
-              <span className="text-[0.6875rem] uppercase tracking-widest font-bold text-on-surface-variant/50">
-                {s.label}
-              </span>
-            </div>
-          ))}
-        </section>
-
-        {/* ── Menu items ── */}
-        <section className="space-y-1">
-          {menuItems.map((item) => (
-            <button
-              key={item.label}
-              className="w-full flex items-center gap-4 p-4 rounded-lg hover:bg-surface-container transition-colors text-left"
-            >
-              <span className="material-symbols-outlined text-primary-container/80 text-2xl">
-                {item.icon}
-              </span>
-              <div className="flex-1">
-                <div className="font-semibold text-sm">{item.label}</div>
-                <div className="text-xs text-on-surface-variant/50 mt-0.5">{item.desc}</div>
+        <div className="space-y-4">
+          {vehicles.map((v: any) => (
+            <div key={v.id} className="bg-[#1c1c1c] border border-white/5 rounded-3xl p-6 flex items-center gap-5 relative group overflow-hidden">
+              {v.is_selected && (
+                <div className="absolute top-0 right-0 bg-[#e82127] text-white text-[8px] font-black uppercase tracking-widest px-3 py-1 rounded-bl-xl shadow-lg">
+                  Actif
+                </div>
+              )}
+              <div className="w-16 h-16 bg-[#252525] rounded-2xl flex items-center justify-center border border-white/5">
+                <span className="material-symbols-outlined text-[#e82127] text-3xl">directions_car</span>
               </div>
-              <span className="material-symbols-outlined text-on-surface-variant/30 text-xl">
-                chevron_right
-              </span>
-            </button>
+              <div className="flex-1">
+                <h4 className="text-lg font-bold tracking-tight">{v.model}</h4>
+                <p className="text-[10px] text-gray-500 font-mono uppercase tracking-widest">{v.vin}</p>
+              </div>
+              <div className="text-right">
+                <p className="font-bold">{v.license_plate}</p>
+                <p className="text-xs text-on-surface-variant/40 font-medium">Tesla Inc.</p>
+              </div>
+            </div>
           ))}
-        </section>
+        </div>
+      </div>
 
-        {/* ── Sign out ── */}
-        <button className="w-full py-3 text-error text-sm font-bold uppercase tracking-widest hover:bg-error/5 rounded-lg transition-colors">
-          Sign Out
-        </button>
-      </main>
-    </>
-  )
-}
+      {/* ── Settings Menu ── */}
+      <div className="space-y-3 mb-12">
+        {[
+          { icon: 'notifications', label: 'Notifications', color: '#e82127' },
+          { icon: 'security', label: 'Sécurité et Confidentialité', color: '#e82127' },
+          { icon: 'help', label: "Centre d'Aide", color: '#e82127' },
+          { icon: 'logout', label: 'Déconnexion', color: '#e2e2e2', classes: 'opacity-50 mt-4' },
+        ].map((item) => (
+          <button key={item.label} className={`w-full bg-[#1c1c1c] border border-white/5 rounded-2xl p-5 flex items-center justify-between group active:scale-[0.98] transition-all ${item.classes}`}>
+            <div className="flex items-center gap-4">
+               <span className="material-symbols-outlined" style={{ color: item.color }}>{item.icon}</span>
+               <span className="font-bold tracking-tight text-sm">{item.label}</span>
+            </div>
+            <span className="material-symbols-outlined text-gray-700 group-hover:translate-x-1 transition-transform">chevron_right</span>
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default Profile;

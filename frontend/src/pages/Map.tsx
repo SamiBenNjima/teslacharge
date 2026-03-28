@@ -1,165 +1,155 @@
-/* ──────────────────────────────────────────────
-   Map Page — Nearby Superchargers
-   Ported from Stitch "Map Browse – State A"
-   ────────────────────────────────────────────── */
+import React, { useEffect, useState } from 'react';
+import { api } from '../lib/api';
 
-import { useState } from 'react'
+const Map: React.FC = () => {
+  const [stations, setStations] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
 
-const stations = [
-  {
-    id: 1,
-    name: 'DTLA Grand Ave Supercharger',
-    address: '350 S Grand Ave, Los Angeles, CA',
-    distance: '1.2 mi',
-    available: 8,
-    total: 12,
-    speed: '250 kW',
-    type: 'V3',
-  },
-  {
-    id: 2,
-    name: 'Santa Monica V3 Supercharger',
-    address: '1234 Ocean Ave, Santa Monica, CA',
-    distance: '3.8 mi',
-    available: 4,
-    total: 8,
-    speed: '250 kW',
-    type: 'V3',
-  },
-  {
-    id: 3,
-    name: 'Beverly Hills Supercharger',
-    address: '9876 Wilshire Blvd, Beverly Hills, CA',
-    distance: '5.1 mi',
-    available: 2,
-    total: 16,
-    speed: '150 kW',
-    type: 'V2',
-  },
-  {
-    id: 4,
-    name: 'Hollywood & Highland',
-    address: '6801 Hollywood Blvd, Los Angeles, CA',
-    distance: '6.3 mi',
-    available: 10,
-    total: 10,
-    speed: '250 kW',
-    type: 'V3',
-  },
-]
+  useEffect(() => {
+    async function loadStations() {
+      try {
+        const data = await api.getStations();
+        setStations(data);
+      } catch (err) {
+        console.error('Error loading stations:', err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadStations();
+  }, []);
 
-export default function MapPage() {
-  const [search, setSearch] = useState('')
+  const filteredStations = stations.filter(s => 
+    s.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    s.city.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
-  const filtered = stations.filter(
-    (s) =>
-      s.name.toLowerCase().includes(search.toLowerCase()) ||
-      s.address.toLowerCase().includes(search.toLowerCase()),
-  )
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#131313] flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#e82127]"></div>
+      </div>
+    );
+  }
 
   return (
-    <>
-      {/* ── Top bar ── */}
-      <div className="sticky top-0 z-50 bg-[#131313] px-6 pt-4 pb-3 space-y-4">
-        <h1 className="font-headline text-[1.5rem] font-bold tracking-tight">
-          Find a Charger
-        </h1>
-        <div className="relative">
-          <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant/50 text-xl">
-            search
-          </span>
+    <div className="min-h-screen bg-[#131313] text-white pb-24 font-['Inter'] flex flex-col">
+      {/* ── Search Header ── */}
+      <div className="px-6 pt-12 pb-6 bg-[#131313]/90 backdrop-blur-md sticky top-0 z-50">
+        <div className="relative mb-6">
           <input
             type="text"
-            placeholder="Search stations, cities..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="w-full bg-surface-container-lowest text-on-surface pl-10 pr-4 py-3 rounded-lg text-sm font-medium placeholder:text-on-surface-variant/40 outline-none focus:ring-2 focus:ring-primary-container/50 transition-all"
+            placeholder="Rechercher une station..."
+            className="w-full bg-[#1c1c1c] border border-white/5 rounded-2xl py-4 px-12 text-sm focus:outline-none focus:border-[#e82127]/50 transition-colors"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-gray-500">
+            search
+          </span>
+          <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-[#e82127]">
+            tune
+          </span>
+        </div>
+
+        {/* ── Quick Filters ── */}
+        <div className="flex gap-2 overflow-x-auto no-scrollbar">
+          {['Toutes', 'Supercharger', 'Disponible', 'V3 Only', 'Favoris'].map((filter, i) => (
+            <button
+              key={filter}
+              className={`px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest whitespace-nowrap transition-all ${
+                i === 0 ? 'bg-[#e82127] text-white shadow-lg shadow-[#e82127]/20 scale-105' : 'bg-[#1c1c1c] text-gray-400 border border-white/5'
+              }`}
+            >
+              {filter}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* ── Main Map Area ── */}
+      <div className="flex-1 relative min-h-[300px] bg-[#1a1a1a] flex items-center justify-center overflow-hidden">
+        {/* Map Background */}
+        <div className="absolute inset-0 opacity-20 grayscale invert contrast-125">
+          <img 
+            src="https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?auto=format&fit=crop&q=80&w=2000" 
+            alt="Map background"
+            className="w-full h-full object-cover"
           />
         </div>
-      </div>
-
-      {/* ── Map placeholder ── */}
-      <div className="mx-6 mt-2 rounded-xl overflow-hidden bg-surface-container-low h-56 flex items-center justify-center relative">
-        <div className="absolute inset-0 bg-gradient-to-br from-surface-container-low to-surface-container opacity-80" />
-        <div className="relative z-10 flex flex-col items-center gap-2 text-on-surface-variant/60">
-          <span className="material-symbols-outlined text-4xl text-primary-container/60">map</span>
-          <span className="text-xs font-bold uppercase tracking-widest">Map View</span>
-          <span className="text-[0.6875rem] text-on-surface-variant/40">Interactive map coming soon</span>
+        
+        {/* Mock Markers */}
+        <div className="relative z-10 w-full h-full">
+           {filteredStations.slice(0, 5).map((s, i) => (
+             <div 
+               key={s.id}
+               className="absolute animate-bounce"
+               style={{ 
+                 top: `${20 + (i * 15)}%`, 
+                 left: `${30 + (i * 10)}%`
+               }}
+             >
+               <div className="bg-[#e82127] p-2 rounded-full shadow-2xl border-2 border-white/20">
+                 <span className="material-symbols-outlined text-white text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>charging_station</span>
+               </div>
+             </div>
+           ))}
         </div>
-        {/* pulsing dot to simulate activity */}
-        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2">
-          <div className="w-3 h-3 bg-primary-container rounded-full animate-ping opacity-40" />
-          <div className="w-3 h-3 bg-primary-container rounded-full absolute inset-0" />
-        </div>
-      </div>
 
-      {/* ── Filter chips ── */}
-      <div className="flex gap-2 px-6 mt-4 overflow-x-auto hide-scrollbar pb-1">
-        {['All', 'V3 250 kW', 'V2 150 kW', 'Available Now'].map((chip, i) => (
-          <button
-            key={chip}
-            className={`whitespace-nowrap px-4 py-1.5 rounded-sm text-[0.6875rem] font-bold uppercase tracking-widest transition-all ${
-              i === 0
-                ? 'bg-primary-container text-on-primary-container'
-                : 'bg-surface-container text-on-surface-variant hover:text-primary'
-            }`}
-          >
-            {chip}
+        <div className="absolute bottom-6 right-6 flex flex-col gap-3">
+          <button className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center text-[#131313] shadow-2xl active:scale-95 transition-transform">
+            <span className="material-symbols-outlined">my_location</span>
           </button>
-        ))}
+          <button className="w-12 h-12 bg-[#e82127] rounded-2xl flex items-center justify-center text-white shadow-2xl active:scale-95 transition-transform">
+            <span className="material-symbols-outlined">add</span>
+          </button>
+        </div>
       </div>
 
-      {/* ── Station list ── */}
-      <div className="px-6 mt-6 space-y-3 pb-4">
-        <h3 className="text-sm font-bold uppercase tracking-widest text-on-surface-variant/50">
-          Nearby Stations
-        </h3>
-        {filtered.map((station) => {
-          const ratio = station.available / station.total
-          const statusColor = ratio > 0.5 ? '#4CAF50' : ratio > 0.15 ? '#FFC107' : '#F44336'
+      {/* ── Station List Area ── */}
+      <div className="bg-[#131313] rounded-t-[40px] -mt-10 relative z-20 pt-8 shadow-[0_-20px_50px_rgba(0,0,0,0.5)]">
+        <div className="px-6 pb-4 flex justify-between items-center">
+          <h3 className="text-sm font-black uppercase tracking-[0.2em] text-gray-500">
+             {filteredStations.length} Stations à proximité
+          </h3>
+          <span className="material-symbols-outlined text-gray-400">expand_more</span>
+        </div>
 
-          return (
-            <div
-              key={station.id}
-              className="bg-surface-container p-5 rounded-lg hover:bg-surface-container-high transition-colors cursor-pointer"
-            >
-              <div className="flex justify-between items-start">
-                <div className="space-y-1 flex-1">
-                  <h4 className="font-bold text-base">{station.name}</h4>
-                  <p className="text-xs text-on-surface-variant/60">{station.address}</p>
+        <div className="px-6 space-y-4 pb-12 overflow-y-auto max-h-[500px] no-scrollbar">
+          {filteredStations.length > 0 ? (
+            filteredStations.map((station: any) => (
+              <div key={station.id} className="bg-[#1c1c1c] border border-white/5 rounded-3xl p-6 flex items-center gap-5 hover:bg-[#222] transition-colors group">
+                <div className="w-16 h-16 bg-[#252525] rounded-2xl flex flex-col items-center justify-center border border-white/5">
+                  <span className="text-xl font-black text-[#e82127]">{station.available_connectors}</span>
+                  <span className="text-[8px] font-black uppercase tracking-tighter text-gray-500">/ {station.total_connectors} DISPO</span>
                 </div>
-                <span className="text-xs font-bold text-on-surface-variant/50 ml-4 whitespace-nowrap">
-                  {station.distance}
-                </span>
-              </div>
-              <div className="flex items-center justify-between mt-3">
-                <div className="flex items-center gap-4">
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 rounded-full" style={{ backgroundColor: statusColor }} />
-                    <span
-                      className="text-[0.6875rem] font-bold uppercase tracking-wider"
-                      style={{ color: statusColor }}
-                    >
-                      {station.available} / {station.total}
-                    </span>
+                <div className="flex-1">
+                  <h4 className="text-lg font-bold tracking-tight">{station.name}</h4>
+                  <p className="text-xs text-gray-500 font-medium mb-2">{station.address}, {station.city}</p>
+                  <div className="flex gap-2">
+                    {station.amenities && Object.keys(station.amenities).slice(0, 3).map(key => (
+                      <span key={key} className="material-symbols-outlined text-[16px] text-gray-600">
+                        {key === 'wifi' ? 'wifi' : key === 'cafe' ? 'local_cafe' : 'restaurant'}
+                      </span>
+                    ))}
                   </div>
-                  <span className="text-[0.6875rem] font-bold text-on-surface-variant/40 bg-surface-container-highest px-2 py-0.5 rounded-sm">
-                    {station.type} · {station.speed}
-                  </span>
                 </div>
-                <button className="bg-primary-container px-4 py-1.5 text-on-primary-container text-[0.6875rem] font-black uppercase tracking-[0.1em] rounded-sm hover:opacity-90 transition-opacity active:scale-95">
-                  Book
-                </button>
+                <div className="flex flex-col items-end gap-2">
+                   <span className="text-[10px] font-black uppercase tracking-widest text-[#e82127] bg-[#e82127]/10 px-2 py-0.5 rounded">V3</span>
+                   <button className="w-10 h-10 bg-[#252525] rounded-xl flex items-center justify-center border border-white/5 active:scale-90 transition-transform">
+                     <span className="material-symbols-outlined text-sm">navigation</span>
+                   </button>
+                </div>
               </div>
-            </div>
-          )
-        })}
-        {filtered.length === 0 && (
-          <div className="text-center py-12 text-on-surface-variant/40 text-sm">
-            No stations match your search.
-          </div>
-        )}
+            ))
+          ) : (
+            <p className="text-center text-gray-500 py-10 italic">Aucune station trouvée.</p>
+          )}
+        </div>
       </div>
-    </>
-  )
-}
+    </div>
+  );
+};
+
+export default Map;
