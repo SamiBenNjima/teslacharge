@@ -1,0 +1,201 @@
+<ion-content fullscreen="true" scroll-y="false">
+  <div class="h-full w-full overflow-y-auto bg-background pb-32">
+
+<!-- TopAppBar -->
+<header class="w-full top-0 sticky bg-[#131313] z-50">
+<div class="flex items-center justify-between px-6 py-4 w-full bg-[#1f1f1f]">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-[#ffb4ac]">arrow_back</span>
+<h1 class="font-['Inter'] font-bold tracking-widest text-sm uppercase text-[#ffb4ac]">TESLA CHARGE</h1>
+</div>
+<div class="text-[#e82127] font-black tracking-tighter italic">PROFILE</div>
+</div>
+</header>
+<main class="max-w-2xl mx-auto px-6 py-8 space-y-12">
+<!-- Driver Identity Card -->
+<section class="relative">
+<div class="flex justify-between items-start mb-6">
+<div class="flex items-center gap-6">
+<div class="relative">
+<img alt="Karim Meddeb" class="w-24 h-24 rounded-full border-2 border-primary-container object-cover shadow-[0_0_20px_rgba(232,33,39,0.2)]" data-alt="portrait of a professional man with short dark hair and a confident expression against a neutral dark studio background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAswVwtgUGty_0XhRox28Vzl2XvQ58o-UJeCLjhlDjQKx4ptfhi8rTcMI5AYEDABtpIICehUYP3eBH9N3na2bRduucbBWziA3Cb3LIsN04XgyvhfaaQFNt-rg9Ro5cl8b1nUAepPXbjjFNTUbxJjH6L3uGasgjjdD92GE0PWHzOhZbt_0KNiieSXfbyYHS5Uma82-bCLOjcnnC0SCbK-QiQIZ5I610qgiuPEXHd45JqfsQwmMEkNcK13v-3wXrkVIvEKTrr9XplUm0"/>
+<div class="absolute -bottom-1 -right-1 bg-green-500 rounded-full p-1 border-2 border-background">
+<span class="material-symbols-outlined text-[14px] text-white block" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<h2 class="text-2xl font-bold tracking-tight">Karim Meddeb</h2>
+<span class="bg-green-500/10 text-green-500 text-[10px] px-2 py-0.5 rounded-full font-bold tracking-wider uppercase">Verified</span>
+</div>
+<p class="text-on-surface-variant/60 text-sm mt-1">karim.meddeb@tesla.corp</p>
+<p class="text-on-surface-variant/60 text-sm">+1 (555) 892-0431</p>
+</div>
+</div>
+<button class="border border-outline-variant hover:bg-surface-variant transition-colors px-4 py-2 rounded-sm text-xs font-bold uppercase tracking-widest flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">edit</span>
+                    Edit profile
+                </button>
+</div>
+</section>
+<!-- My Vehicles Section -->
+<section class="space-y-6">
+<div class="flex justify-between items-end">
+<h3 class="text-xl font-bold tracking-tight uppercase">My Vehicles</h3>
+<button class="text-primary-container font-bold text-xs uppercase tracking-widest flex items-center gap-1 hover:brightness-125 transition-all">
+                    Add vehicle <span class="material-symbols-outlined text-lg leading-none">add</span>
+</button>
+</div>
+<div class="space-y-4">
+<!-- Active Vehicle Card -->
+<div class="bg-surface-container border-l-4 border-primary-container p-6 rounded-xl relative overflow-hidden">
+<div class="absolute top-0 right-0 p-4">
+<span class="bg-green-500 text-black text-[9px] font-black px-3 py-1 rounded-sm uppercase tracking-tighter">Active</span>
+</div>
+<div class="flex flex-col md:flex-row md:items-center gap-6">
+<div class="w-full md:w-48 h-28 bg-surface-container-low rounded-lg flex items-center justify-center p-2">
+<img alt="Tesla Model 3" class="object-contain max-h-full" data-alt="side view of a sleek white Tesla Model 3 in a minimalist dark studio setting with cinematic rim lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBy89WijUFqRPTItz49-5i3Kkb4jOldAUSe6XdwS_P83HjMltu4ijoRhgJpJquuz6xw-4BnUHHp1AaFN3hb2flpAuDGLZ04QUm2qpLSuCQufYhpkFhWvsnwrh1IEKi0p7pdYsaMfgcnnJ4TKQjJCyzMhGwl0t6a9ripfGYZOcbjgoO1hf_D3W9kAMprzcU7ZOftyCIqWrKMkpVp6G39MQf57Ezr-Cit1zt4QdmiKCorRGNklk6xg-VBiWE6jw0LJLYQ5fNZd1l2a80"/>
+</div>
+<div class="flex-1 space-y-4">
+<div>
+<h4 class="text-lg font-bold">Tesla Model 3 Long Range</h4>
+<div class="grid grid-cols-2 gap-4 mt-2">
+<div>
+<p class="text-[10px] text-on-surface-variant/40 uppercase tracking-widest font-bold">VIN Number</p>
+<p class="text-xs font-mono text-on-surface-variant">5YJ3E1EB8LFXXXXXX</p>
+</div>
+<div>
+<p class="text-[10px] text-on-surface-variant/40 uppercase tracking-widest font-bold">Charging Standard</p>
+<p class="text-xs text-on-surface-variant">NACS (Tesla)</p>
+</div>
+</div>
+</div>
+<div class="flex gap-3">
+<button class="bg-surface-container-highest hover:bg-surface-variant transition-colors px-4 py-2 text-[10px] font-bold uppercase tracking-widest rounded-sm">Deselect</button>
+<button class="border border-outline-variant/30 hover:bg-error-container/20 transition-colors px-4 py-2 text-[10px] font-bold uppercase tracking-widest rounded-sm">Transfer / Sell</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Inactive Vehicle Card -->
+<div class="bg-surface-container p-6 rounded-xl border border-outline-variant/10">
+<div class="flex flex-col md:flex-row md:items-center gap-6">
+<div class="w-full md:w-48 h-28 bg-surface-container-low rounded-lg flex items-center justify-center p-2 opacity-60 grayscale-[0.5]">
+<img alt="Tesla Model Y" class="object-contain max-h-full" data-alt="dynamic three-quarter view of a black Tesla Model Y in a high-contrast dark environment with sharp red highlights" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC2HVddMiyzXpZR4mq-TtkcuKhhrJVhnIGU_yPhc44MRrw5aIIxWZIt90rpStDxR1tlpH31yIpnixmq9EIHTitcdDjyZdkCMJKVTGAmDVgb-uocOBliMkF9VksIXIaXNfO7-ln9tuw7Pt1z84KIpy4w7bJ3Kh19XdJvIuZYTmcg8T5wFAJeYG9Png1addTrBmPbcAhJbSN9uX8y61FV5PGIHKb3cZMcc8SkHQCzVsZs6S7qmu6RZgEAsyN_gICQ-zwn1SP3cN-WLSA"/>
+</div>
+<div class="flex-1 space-y-4">
+<div>
+<h4 class="text-lg font-bold text-on-surface-variant/80">Tesla Model Y Performance</h4>
+<div class="grid grid-cols-2 gap-4 mt-2">
+<div>
+<p class="text-[10px] text-on-surface-variant/40 uppercase tracking-widest font-bold">VIN Number</p>
+<p class="text-xs font-mono text-on-surface-variant/60">7SAYGDEF6PFXXXXXX</p>
+</div>
+<div>
+<p class="text-[10px] text-on-surface-variant/40 uppercase tracking-widest font-bold">Charging Standard</p>
+<p class="text-xs text-on-surface-variant/60">NACS (Tesla)</p>
+</div>
+</div>
+</div>
+<div class="flex gap-3">
+<button class="bg-primary-container text-black hover:brightness-110 transition-colors px-4 py-2 text-[10px] font-bold uppercase tracking-widest rounded-sm">Set as Active</button>
+<button class="border border-outline-variant/30 hover:bg-error-container/20 transition-colors px-4 py-2 text-[10px] font-bold uppercase tracking-widest rounded-sm">Remove</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Account Settings -->
+<section class="space-y-8">
+<!-- Group 1: Notifications & Security -->
+<div class="space-y-3">
+<h4 class="text-[11px] font-black uppercase tracking-[0.2em] text-on-surface-variant/40 px-2">Notifications &amp; Security</h4>
+<div class="bg-surface-container-low rounded-xl overflow-hidden">
+<!-- OTP Channel Row -->
+<div class="flex items-center justify-between p-4 border-b border-surface-variant/20">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary-container">vibration</span>
+<span class="text-sm font-medium">OTP Delivery Channel</span>
+</div>
+<div class="flex bg-surface-container-highest rounded-lg p-1">
+<button class="px-3 py-1 text-[10px] font-bold uppercase tracking-tight bg-primary-container text-black rounded-md">Email</button>
+<button class="px-3 py-1 text-[10px] font-bold uppercase tracking-tight text-on-surface-variant/60">WhatsApp</button>
+</div>
+</div>
+<!-- Push Toggle -->
+<div class="flex items-center justify-between p-4 border-b border-surface-variant/20">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary-container">notifications_active</span>
+<span class="text-sm font-medium">Push Notifications</span>
+</div>
+<div class="w-10 h-5 bg-primary-container rounded-full relative">
+<div class="absolute right-0.5 top-0.5 w-4 h-4 bg-black rounded-full shadow-sm"></div>
+</div>
+</div>
+<!-- Biometric Toggle -->
+<div class="flex items-center justify-between p-4">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary-container">fingerprint</span>
+<span class="text-sm font-medium">Biometric Authentication</span>
+</div>
+<div class="w-10 h-5 bg-surface-container-highest rounded-full relative border border-outline-variant/20">
+<div class="absolute left-0.5 top-0.5 w-4 h-4 bg-on-surface-variant/40 rounded-full"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Group 2: Support -->
+<div class="space-y-3">
+<h4 class="text-[11px] font-black uppercase tracking-[0.2em] text-on-surface-variant/40 px-2">Support</h4>
+<div class="bg-surface-container-low rounded-xl overflow-hidden">
+<div class="flex items-center justify-between p-4 border-b border-surface-variant/20 hover:bg-surface-variant/20 cursor-pointer transition-colors">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-surface-variant/60">help_center</span>
+<span class="text-sm font-medium">Help Center</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant/40">chevron_right</span>
+</div>
+<div class="flex items-center justify-between p-4 border-b border-surface-variant/20 hover:bg-surface-variant/20 cursor-pointer transition-colors">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-surface-variant/60">contact_support</span>
+<span class="text-sm font-medium">Contact Support</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant/40">chevron_right</span>
+</div>
+<div class="flex items-center justify-between p-4 hover:bg-surface-variant/20 cursor-pointer transition-colors">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-surface-variant/60">policy</span>
+<span class="text-sm font-medium">Terms &amp; Privacy</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant/40">chevron_right</span>
+</div>
+</div>
+</div>
+<div class="pt-8 pb-4 text-center">
+<button class="text-primary-container font-black text-xs uppercase tracking-[0.25em] hover:brightness-125 active:scale-95 transition-all">Sign out</button>
+<p class="text-[9px] text-on-surface-variant/20 mt-4 uppercase tracking-widest font-mono">Build Version 4.2.0-Alpha-09</p>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-2 bg-[#131313] z-50 rounded-t-lg shadow-[0_-4px_40px_rgba(232,33,39,0.08)] border-t border-[#353535]/15">
+<a class="flex flex-col items-center justify-center text-[#e2e2e2]/60 py-2 px-4 hover:text-[#e82127] transition-all duration-300 ease-out" routerLink="/profile">
+<span class="material-symbols-outlined mb-1">home</span>
+<span class="font-['Inter'] text-[11px] font-medium uppercase tracking-[0.05em]">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#e2e2e2]/60 py-2 px-4 hover:text-[#e82127] transition-all duration-300 ease-out" routerLink="/profile">
+<span class="material-symbols-outlined mb-1">map</span>
+<span class="font-['Inter'] text-[11px] font-medium uppercase tracking-[0.05em]">Map</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#e2e2e2]/60 py-2 px-4 hover:text-[#e82127] transition-all duration-300 ease-out" routerLink="/profile">
+<span class="material-symbols-outlined mb-1">event_available</span>
+<span class="font-['Inter'] text-[11px] font-medium uppercase tracking-[0.05em]">Reservations</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#e82127] bg-[#1f1f1f] rounded-lg py-2 px-4 shadow-[0_0_15px_rgba(232,33,39,0.3)] transition-all duration-300 ease-out" routerLink="/profile">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="font-['Inter'] text-[11px] font-medium uppercase tracking-[0.05em]">Profile</span>
+</a>
+</nav>
+
+  </div>
+</ion-content>
