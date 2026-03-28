@@ -16,6 +16,8 @@ export type Station = {
   address: string;
   city: string;
   location: any;
+  latitude: number;
+  longitude: number;
   operator: string;
   total_connectors: number;
   available_connectors: number;
@@ -97,7 +99,7 @@ export const api = {
    */
   async getStations() {
     const { data, error } = await supabase
-      .from('stations')
+      .from('stations_with_coords')
       .select(`
         *,
         charging_connectors (*)
