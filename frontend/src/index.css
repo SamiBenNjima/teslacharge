@@ -1,0 +1,95 @@
+@import "tailwindcss";
+
+/* ═══════════════════════════════════════════════
+   TeslaCharge Design System — Ported from Stitch
+   ═══════════════════════════════════════════════ */
+
+@theme {
+  /* ── Primary Palette ── */
+  --color-background: #131313;
+  --color-surface: #131313;
+  --color-surface-dim: #131313;
+  --color-surface-bright: #393939;
+  --color-surface-variant: #353535;
+  --color-surface-tint: #ffb4ac;
+  --color-surface-container-lowest: #0e0e0e;
+  --color-surface-container-low: #1b1b1b;
+  --color-surface-container: #1f1f1f;
+  --color-surface-container-high: #2a2a2a;
+  --color-surface-container-highest: #353535;
+
+  --color-primary: #ffb4ac;
+  --color-primary-container: #e82127;
+  --color-primary-fixed: #ffdad6;
+  --color-primary-fixed-dim: #ffb4ac;
+
+  --color-secondary: #ffb4ac;
+  --color-secondary-container: #8e1c1b;
+  --color-secondary-fixed: #ffdad6;
+  --color-secondary-fixed-dim: #ffb4ac;
+
+  --color-tertiary: #8aceff;
+  --color-tertiary-container: #007eb5;
+  --color-tertiary-fixed: #c9e6ff;
+  --color-tertiary-fixed-dim: #8aceff;
+
+  --color-error: #ffb4ab;
+  --color-error-container: #93000a;
+
+  /* ── On-* tokens ── */
+  --color-on-background: #e2e2e2;
+  --color-on-surface: #e2e2e2;
+  --color-on-surface-variant: #e7bdb8;
+  --color-on-primary: #690007;
+  --color-on-primary-container: #140000;
+  --color-on-primary-fixed: #410002;
+  --color-on-primary-fixed-variant: #93000e;
+  --color-on-secondary: #690007;
+  --color-on-secondary-container: #ff9f95;
+  --color-on-secondary-fixed: #410002;
+  --color-on-secondary-fixed-variant: #8a1a19;
+  --color-on-tertiary: #00344e;
+  --color-on-tertiary-container: #ffffff;
+  --color-on-tertiary-fixed: #001e2f;
+  --color-on-tertiary-fixed-variant: #004b6f;
+  --color-on-error: #690005;
+  --color-on-error-container: #ffdad6;
+
+  --color-inverse-surface: #e2e2e2;
+  --color-inverse-on-surface: #303030;
+  --color-inverse-primary: #c00015;
+
+  --color-outline: #ae8884;
+  --color-outline-variant: #5d3f3c;
+
+  /* ── Border radius ── */
+  --radius-sm: 0.125rem;
+  --radius-DEFAULT: 0.125rem;
+  --radius-lg: 0.25rem;
+  --radius-xl: 0.5rem;
+  --radius-full: 0.75rem;
+
+  /* ── Font families ── */
+  --font-headline: "Inter", sans-serif;
+  --font-body: "Inter", sans-serif;
+  --font-label: "Inter", sans-serif;
+}
+
+/* ── Base Styles ── */
+html, body, #root {
+  min-height: 100dvh;
+  background-color: var(--color-background);
+  color: var(--color-on-surface);
+  font-family: "Inter", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Scrollbar hide utility ── */
+.hide-scrollbar::-webkit-scrollbar { display: none; }
+.hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* ── Material Symbols ── */
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
