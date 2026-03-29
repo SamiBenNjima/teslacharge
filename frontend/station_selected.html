@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Station Details - Tesla Supercharger</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#ffb4ac",
+              "on-tertiary-container": "#ffffff",
+              "outline-variant": "#5d3f3c",
+              "surface-container-high": "#2a2a2a",
+              "surface-container": "#1f1f1f",
+              "surface-container-lowest": "#0e0e0e",
+              "on-tertiary-fixed-variant": "#004b6f",
+              "on-primary-fixed-variant": "#93000e",
+              "surface": "#131313",
+              "on-secondary-fixed-variant": "#8a1a19",
+              "on-secondary-container": "#ff9f95",
+              "surface-dim": "#131313",
+              "error": "#ffb4ab",
+              "on-error-container": "#ffdad6",
+              "secondary-fixed-dim": "#ffb4ac",
+              "on-secondary-fixed": "#410002",
+              "surface-container-low": "#1b1b1b",
+              "inverse-on-surface": "#303030",
+              "on-primary-container": "#140000",
+              "on-error": "#690005",
+              "background": "#131313",
+              "primary-fixed": "#ffdad6",
+              "surface-tint": "#ffb4ac",
+              "primary-container": "#e82127",
+              "tertiary-fixed-dim": "#8aceff",
+              "secondary-fixed": "#ffdad6",
+              "surface-variant": "#353535",
+              "secondary-container": "#8e1c1b",
+              "on-primary": "#690007",
+              "tertiary-container": "#007eb5",
+              "outline": "#ae8884",
+              "surface-bright": "#393939",
+              "on-tertiary": "#00344e",
+              "on-surface": "#e2e2e2",
+              "secondary": "#ffb4ac",
+              "on-surface-variant": "#e7bdb8",
+              "primary-fixed-dim": "#ffb4ac",
+              "on-tertiary-fixed": "#001e2f",
+              "on-background": "#e2e2e2",
+              "error-container": "#93000a",
+              "inverse-primary": "#c00015",
+              "surface-container-highest": "#353535",
+              "tertiary": "#8aceff",
+              "inverse-surface": "#e2e2e2",
+              "tertiary-fixed": "#c9e6ff",
+              "on-primary-fixed": "#410002",
+              "on-secondary": "#690007"
+            },
+            fontFamily: {
+              "headline": ["Inter"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .custom-scrollbar::-webkit-scrollbar {
+        width: 4px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-track {
+        background: #131313;
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #353535;
+      }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface font-body overflow-hidden">
+<!-- Background Map (Dimmed) -->
+<div class="fixed inset-0 z-0">
+<div class="absolute inset-0 bg-black/60 z-10 backdrop-blur-[2px]"></div>
+<img class="w-full h-full object-cover" data-alt="Dark stylized satellite map view of an urban coastal area with subtle glowing red route lines and points of interest" data-location="Tunis" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDjnc83-rbGQnpVH3Zf5zeMT-qpi4Xn8JHSalc_ulxeqV82Lv-RK4VBwVURD4JQ3RDxTlhqvIMHv5Qn29Ma4ghjCQs-4B_7XQVXJd0WuWrVCGPMtd6lL5VHRU7hvOJCKIdyr64IVCzA5hzXb6-F5Z9ODt4F5Uwiy25sOAoqmxyHrEEpoh6T2LJaMJfKbWQj1vbWKKOEsgV9hjyIBuDaIjIMgGOfdubQGvV9D8iVMHOI6iRiMvb4OZx5JWhcPbE3X6nD4rN3ING-mQ4"/>
+</div>
+<!-- Top App Bar (From Shared Components) -->
+<header class="fixed top-0 left-0 right-0 z-50 flex items-center px-6 h-16 bg-[#1f1f1f]/40 backdrop-blur-xl mx-4 mt-4 rounded-sm shadow-[0_40px_40px_rgba(232,33,39,0.08)]">
+<div class="flex items-center gap-4 w-full">
+<span class="material-symbols-outlined text-[#ffb4ac] active:scale-95 duration-200 cursor-pointer" data-icon="search">search</span>
+<h1 class="font-['Inter'] font-semibold text-sm tracking-wider uppercase text-[#ffb4ac]">Map</h1>
+<div class="ml-auto">
+<span class="text-xl font-bold text-[#e2e2e2] tracking-tighter">TESLA</span>
+</div>
+</div>
+</header>
+<!-- Main Content Area (Full Height Sheet) -->
+<main class="fixed inset-0 z-20 flex flex-col pt-16">
+<!-- Expanded Sheet -->
+<div class="flex-1 bg-background mt-4 rounded-t-[2rem] shadow-2xl flex flex-col overflow-hidden">
+<!-- Sheet Drag Handle -->
+<div class="w-full flex justify-center py-4">
+<div class="w-12 h-1 bg-surface-variant rounded-full opacity-50"></div>
+</div>
+<!-- Content Container (Scrollable) -->
+<div class="flex-1 overflow-y-auto custom-scrollbar px-6 pb-32">
+<!-- Header & Rating -->
+<div class="flex justify-between items-start mb-6">
+<div>
+<div class="flex items-center gap-2 mb-1">
+<span class="text-[0.6875rem] font-medium tracking-[0.05em] uppercase text-primary py-1 px-2 bg-primary-container/10 rounded-sm">OPEN</span>
+<div class="flex items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined text-xs" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-sm font-medium">4.7</span>
+</div>
+</div>
+<h2 class="text-2xl font-bold tracking-tight text-on-surface">Tesla Supercharger — Lac de Tunis</h2>
+</div>
+<button class="p-3 bg-surface-container rounded-full hover:bg-surface-container-highest transition-colors active:scale-90 duration-150">
+<span class="material-symbols-outlined text-primary" data-icon="favorite">favorite</span>
+</button>
+</div>
+<!-- Photo Strip -->
+<div class="flex gap-3 overflow-x-auto pb-4 mb-8 custom-scrollbar">
+<div class="min-w-[280px] h-48 rounded-xl overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="Modern electric vehicle charging station at night with sleek red lighting and dark metallic textures" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCvRvncnXLSWH3a_a6liYaiTL3lOaHALilQ9cwIL3TZ8FqLLWca3HAeCwup9dL_GBBT7pGxxVm2XHuLCWET9uxUYLDln07tECz7_HQKq6bKQjsI9feKtIM5Kj0Uq1Hne_gKG6K0mvXRv7hSsuLxdISQNpgrkIUp1JUYA47LedMwKZjdfgxUWUYv5DARF1IgVv4HW3Au9ojvFsbTyjFyZ1ew8bLFFKJFeZRar5EVN3-mfTFh0Rm9OtDdwONWuQlh5bYB0IuiPstRAkU"/>
+</div>
+<div class="min-w-[200px] h-48 rounded-xl overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="Close up of a charging connector plugged into a car under dramatic industrial lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAn0gsz9TS3ZZ8Mtrr64t2eFS0a-LOy-pAKQjeup2rzT_c7zpE58SwUmILzlp9VBf8TaGGTuhFYPiHjd8A01gmjRKxLO5xFIZC3zYwm18xcK-LeTLVvtYzKhHBf1SgsTkC_DXpSmKWo8H-e4A3oUNhZaAmxgEuvB1Qpy6SoJWsCc_EVt2Jn-KOXfNocFjjV4c2J_x1Uia6bQHajFqxDZKIUkCfSDU1_0s9zkEylNxXu-f2aud7dHz52vk-AkKZ6hhup8jlAaq0DMPg"/>
+</div>
+<div class="min-w-[200px] h-48 rounded-xl overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="Interior of a luxury modern cafe with dark stone surfaces and minimal aesthetic" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDlzsVmHvgmXh7jLCyVjCOGYCnKIq8nt8m2Deej3SEbEGVKpm4dhCdZzCWQX5jdLUoojyziye6N2QVOKUDYRChOJeTELLB2YMhrobwrH4vv7iT4X13K9GHhlY4Mc_FZmEQjNqnUT1jZ9GRuPC_ksNrJb7fQuNfbIB9iNb4sB8BBJkiUT8YUdwEqOsBPypYqxHX7g2q0XSs7TjOr3VnPAz8-InVUaH8R-jrPztKEbkeKbZFdrlwNZf5a98grkBHt3e62x82G3PVo6nw"/>
+</div>
+</div>
+<!-- Amenities Bento Grid -->
+<div class="grid grid-cols-3 gap-3 mb-10">
+<div class="bg-surface-container-low p-4 rounded-xl flex flex-col items-center gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="wifi">wifi</span>
+<span class="text-[0.6875rem] font-bold uppercase tracking-widest text-on-surface-variant">WiFi</span>
+</div>
+<div class="bg-surface-container-low p-4 rounded-xl flex flex-col items-center gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="wc">wc</span>
+<span class="text-[0.6875rem] font-bold uppercase tracking-widest text-on-surface-variant">Restroom</span>
+</div>
+<div class="bg-surface-container-low p-4 rounded-xl flex flex-col items-center gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="coffee">coffee</span>
+<span class="text-[0.6875rem] font-bold uppercase tracking-widest text-on-surface-variant">Café</span>
+</div>
+</div>
+<!-- Technical Specs (The Kinetic Monolith Style) -->
+<div class="mb-10">
+<h3 class="text-sm font-bold tracking-[0.1em] uppercase text-on-surface-variant mb-6 flex items-center gap-2">
+<span class="w-2 h-2 bg-primary-container rounded-full"></span>
+                        Connector Availability
+                    </h3>
+<div class="space-y-4">
+<!-- Connector 01 -->
+<div class="bg-surface-container p-6 rounded-sm flex items-center justify-between">
+<div class="flex items-center gap-6">
+<div class="flex flex-col">
+<span class="text-[0.6875rem] font-medium text-on-surface-variant uppercase tracking-widest mb-1">ID</span>
+<span class="font-mono text-lg font-bold">CONN-01</span>
+</div>
+<div class="flex flex-col">
+<span class="text-[0.6875rem] font-medium text-on-surface-variant uppercase tracking-widest mb-1">TYPE</span>
+<span class="font-bold">NACS</span>
+</div>
+<div class="flex flex-col">
+<span class="text-[0.6875rem] font-medium text-on-surface-variant uppercase tracking-widest mb-1">MAX</span>
+<span class="font-bold">250kW</span>
+</div>
+</div>
+<div class="flex flex-col items-end">
+<span class="text-[0.6875rem] font-medium text-primary uppercase tracking-widest mb-1">STATUS</span>
+<span class="text-sm font-bold text-primary">AVAILABLE</span>
+</div>
+</div>
+<!-- Connector 02 -->
+<div class="bg-surface-container-low p-6 rounded-sm flex items-center justify-between opacity-60">
+<div class="flex items-center gap-6">
+<div class="flex flex-col">
+<span class="text-[0.6875rem] font-medium text-on-surface-variant uppercase tracking-widest mb-1">ID</span>
+<span class="font-mono text-lg font-bold">CONN-02</span>
+</div>
+<div class="flex flex-col">
+<span class="text-[0.6875rem] font-medium text-on-surface-variant uppercase tracking-widest mb-1">TYPE</span>
+<span class="font-bold">NACS</span>
+</div>
+<div class="flex flex-col">
+<span class="text-[0.6875rem] font-medium text-on-surface-variant uppercase tracking-widest mb-1">MAX</span>
+<span class="font-bold">250kW</span>
+</div>
+</div>
+<div class="flex flex-col items-end">
+<span class="text-[0.6875rem] font-medium text-on-surface-variant uppercase tracking-widest mb-1">STATUS</span>
+<span class="text-sm font-bold text-on-surface-variant">OCCUPIED</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Technical Footer Info -->
+<div class="bg-surface-container-lowest p-6 rounded-xl mb-6">
+<div class="flex justify-between items-center text-on-surface-variant text-xs">
+<span class="uppercase tracking-widest font-semibold">Pricing</span>
+<span class="font-bold text-on-surface">0.42 TND/kWh</span>
+</div>
+<div class="mt-4 flex justify-between items-center text-on-surface-variant text-xs">
+<span class="uppercase tracking-widest font-semibold">Idle Fee</span>
+<span class="font-bold text-on-surface">1.00 TND/min</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Floating Action Button (Station Specific CTA) -->
+<div class="fixed bottom-24 left-6 right-6 z-40">
+<button class="w-full bg-primary-container h-16 flex items-center justify-center gap-3 text-on-primary-container font-bold tracking-widest uppercase rounded-sm shadow-[0_20px_40px_rgba(232,33,39,0.2)] active:scale-95 transition-transform">
+            SCHEDULE RESERVATION
+            <span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+<!-- Bottom Navigation Bar (From Shared Components) -->
+<nav class="fixed bottom-0 w-full z-50 flex justify-around items-center h-20 px-4 bg-[#131313] border-t-0">
+<a class="flex flex-col items-center justify-center text-[#353535] hover:text-[#e2e2e2] transition-all active:scale-90 duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-['Inter'] text-[0.6875rem] font-medium tracking-[0.05em] uppercase">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#e82127] drop-shadow-[0_0_8px_rgba(232,33,39,0.5)] active:scale-90 duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="map">map</span>
+<span class="font-['Inter'] text-[0.6875rem] font-medium tracking-[0.05em] uppercase">Map</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#353535] hover:text-[#e2e2e2] transition-all active:scale-90 duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="event_available">event_available</span>
+<span class="font-['Inter'] text-[0.6875rem] font-medium tracking-[0.05em] uppercase">Reservations</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#353535] hover:text-[#e2e2e2] transition-all active:scale-90 duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-['Inter'] text-[0.6875rem] font-medium tracking-[0.05em] uppercase">Profile</span>
+</a>
+</nav>
+</body></html>

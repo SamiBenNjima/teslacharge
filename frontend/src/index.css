@@ -86,8 +86,10 @@ html, body, #root {
 }
 
 /* ── Scrollbar hide utility ── */
-.hide-scrollbar::-webkit-scrollbar { display: none; }
-.hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+.hide-scrollbar::-webkit-scrollbar, .no-scrollbar::-webkit-scrollbar { display: none; }
+.hide-scrollbar, .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+::-webkit-scrollbar { display: none; }
+* { -ms-overflow-style: none; scrollbar-width: none; }
 
 /* ── Material Symbols ── */
 .material-symbols-outlined {
