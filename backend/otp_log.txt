@@ -1,0 +1,20 @@
+=================================================
+📧 [EMAIL] OTP sent to: sami@teslacharge.tn
+📧 [EMAIL] OTP Code: 260018
+📧 [EMAIL] Valid for 10 minutes
+=================================================
+=================================================
+📧 [EMAIL] OTP sent to: testuser@test.com
+📧 [EMAIL] OTP Code: 511402
+📧 [EMAIL] Valid for 10 minutes
+=================================================
+=================================================
+📧 [EMAIL] OTP sent to: lina@teslacharge.tn
+📧 [EMAIL] OTP Code: 596521
+📧 [EMAIL] Valid for 10 minutes
+=================================================
+=================================================
+📧 [EMAIL] OTP sent to: lina@teslacharge.tn
+📧 [EMAIL] OTP Code: 061970
+📧 [EMAIL] Valid for 10 minutes
+=================================================

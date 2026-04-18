@@ -25,6 +25,138 @@ export type Station = {
 };
 
 export const api = {
+  // Custom Auth Endpoints (Spring Boot)
+  async sendSignUpOtp(email: string, phone: string, vin: string, channel: 'EMAIL' | 'WHATSAPP' = 'EMAIL') {
+    const res = await fetch('http://localhost:8082/api/auth/signup/send-otp', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, phone, vin, channel })
+    });
+    if (!res.ok) throw new Error(await res.text());
+  },
+  
+  async verifySignUpOtp(payload: any) {
+    const res = await fetch('http://localhost:8082/api/auth/signup/verify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    if (!res.ok) throw new Error(await res.text());
+    return res.json();
+  },
+
+  async sendSignInOtp(email: string, vin: string, channel: 'EMAIL' | 'WHATSAPP' = 'EMAIL') {
+    const res = await fetch('http://localhost:8082/api/auth/signin/send-otp', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, vin, channel })
+    });
+    if (!res.ok) throw new Error(await res.text());
+  },
+
+  async verifySignInOtp(email: string, otp: string) {
+    const res = await fetch('http://localhost:8082/api/auth/signin/verify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, otp })
+    });
+    if (!res.ok) throw new Error(await res.text());
+    return res.json();
+  },
+
+  // Station Endpoints (Spring Boot)
+  async getNearbyStations(lat: number, lng: number, radius: number = 10, limit: number = 50) {
+    const token = localStorage.getItem('authToken');
+    const res = await fetch(`http://localhost:8082/api/stations/nearby?lat=${lat}&lng=${lng}&radius=${radius}&limit=${limit}`, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    });
+    if (!res.ok) throw new Error(await res.text());
+    return res.json();
+  },
+
+  async getStationDetails(stationId: string) {
+    const token = localStorage.getItem('authToken');
+    const res = await fetch(`http://localhost:8082/api/stations/${stationId}`, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    });
+    if (!res.ok) throw new Error(await res.text());
+    return res.json();
+  },
+
+  async getAvailableConnectors(stationId: string) {
+    const token = localStorage.getItem('authToken');
+    const res = await fetch(`http://localhost:8082/api/stations/${stationId}/connectors`, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    });
+    if (!res.ok) throw new Error(await res.text());
+    return res.json();
+  },
+
+  // Reservation Endpoints (Spring Boot)
+  async createReservation(stationId: string, connectorId: string, scheduledStart: string, scheduledEnd: string) {
+    const token = localStorage.getItem('authToken');
+    const res = await fetch('http://localhost:8082/api/reservations', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        stationId,
+        connectorId,
+        scheduledStart,
+        scheduledEnd
+      })
+    });
+    if (!res.ok) throw new Error(await res.text());
+    return res.json();
+  },
+
+  async getMyReservations() {
+    const token = localStorage.getItem('authToken');
+    const res = await fetch('http://localhost:8082/api/reservations', {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    });
+    if (!res.ok) throw new Error(await res.text());
+    return res.json();
+  },
+
+  async cancelReservation(reservationId: string) {
+    const token = localStorage.getItem('authToken');
+    const res = await fetch(`http://localhost:8082/api/reservations/${reservationId}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    });
+    if (!res.ok) throw new Error(await res.text());
+  },
+
+  async reportReservationIssue(reservationId: string, note: string) {
+    const token = localStorage.getItem('authToken');
+    const res = await fetch(`http://localhost:8082/api/reservations/${reservationId}/report?note=${encodeURIComponent(note)}`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    });
+    if (!res.ok) throw new Error(await res.text());
+  },
+
   /**
    * Fetch a driver's profile and their selected active vehicle.
    */
@@ -128,17 +260,4 @@ export const api = {
     return data;
   },
 
-  /**
-   * Cancel a reservation.
-   */
-  async cancelReservation(reservationId: string) {
-    const { data, error } = await supabase
-      .from('reservations')
-      .update({ status: 'CANCELLED' })
-      .eq('id', reservationId)
-      .select();
-
-    if (error) throw error;
-    return data;
-  }
 };

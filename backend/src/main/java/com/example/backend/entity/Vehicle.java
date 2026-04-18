@@ -23,6 +23,7 @@ public class Vehicle {
     @Column(name = "license_plate", unique = true)
     private String licensePlate;
 
+    @Column(name = "year_of_manufacture")
     private Integer year;
 
     private String color;

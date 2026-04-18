@@ -31,7 +31,12 @@ public class Station {
     @Column(name = "available_connectors")
     private Integer availableConnectors;
 
-    // Skipping PostGIS geometry for now (requires spatial extensions)
-    // Map amenities as JSONB if using pg-dialect-jsonb or similar, 
-    // but for now we'll just omit or map to String.
+    @Column(name = "latitude", nullable = false)
+    private Double latitude;
+
+    @Column(name = "longitude", nullable = false)
+    private Double longitude;
+
+    @Column(name = "is_operational", nullable = false)
+    private Boolean isOperational = true;
 }

@@ -8,4 +8,5 @@ import java.util.UUID;
 
 public interface ConnectorRepository extends JpaRepository<Connector, UUID> {
     List<Connector> findByStation(Station station);
+    List<Connector> findByStationIdAndStatus(UUID stationId, String status);
 }

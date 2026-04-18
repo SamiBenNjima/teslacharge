@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { api } from '../lib/api';
 
 const Reservations: React.FC = () => {
-  const driverId = 'd0000000-0000-0000-0000-000000000001'; // Sami
   const [activeTab, setActiveTab] = useState<'upcoming' | 'past'>('upcoming');
   const [reservations, setReservations] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -10,7 +9,7 @@ const Reservations: React.FC = () => {
   const loadReservations = async () => {
     setLoading(true);
     try {
-      const data = await api.getReservations(driverId);
+      const data = await api.getMyReservations();
       setReservations(data);
     } catch (err) {
       console.error('Error loading reservations:', err);
@@ -27,9 +26,21 @@ const Reservations: React.FC = () => {
     if (!window.confirm('Voulez-vous vraiment annuler cette réservation ?')) return;
     try {
       await api.cancelReservation(id);
-      await loadReservations();
+      await loadReservations(); // Reload the list
     } catch (err) {
       alert("Erreur lors de l'annulation");
+    }
+  };
+
+  const handleReportIssue = async (id: string) => {
+    const note = prompt('Décrivez le problème rencontré:');
+    if (!note) return;
+
+    try {
+      await api.reportReservationIssue(id, note);
+      alert('Problème signalé avec succès');
+    } catch (err) {
+      alert("Erreur lors du signalement");
     }
   };
 
@@ -87,8 +98,8 @@ const Reservations: React.FC = () => {
                <div className="p-6">
                  <div className="flex justify-between items-start mb-6">
                    <div>
-                     <h3 className="text-xl font-bold tracking-tight mb-1">{res.stations?.name}</h3>
-                     <p className="text-xs text-gray-500 font-medium">{res.stations?.address}</p>
+                     <h3 className="text-xl font-bold tracking-tight mb-1">{res.stationName}</h3>
+                     <p className="text-xs text-gray-500 font-medium">Type: {res.connectorType}</p>
                    </div>
                    <span className={`px-4 py-1.5 rounded-sm text-[8px] font-black uppercase tracking-[0.2em] ${
                      res.status === 'CONFIRMED' ? 'bg-[#e82127]/10 text-[#e82127]' :
@@ -104,38 +115,41 @@ const Reservations: React.FC = () => {
                      <span className="material-symbols-outlined text-[#e82127] text-xl">calendar_today</span>
                      <div>
                        <p className="text-[8px] text-gray-500 uppercase font-black tracking-widest">Date</p>
-                       <p className="text-sm font-bold">{new Date(res.scheduled_start).toLocaleDateString()}</p>
+                       <p className="text-sm font-bold">{new Date(res.scheduledStart).toLocaleDateString()}</p>
                      </div>
                    </div>
                    <div className="flex items-center gap-3">
                      <span className="material-symbols-outlined text-[#e82127] text-xl">schedule</span>
                      <div>
                        <p className="text-[8px] text-gray-500 uppercase font-black tracking-widest">Heure</p>
-                       <p className="text-sm font-bold">{new Date(res.scheduled_start).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
+                       <p className="text-sm font-bold">{new Date(res.scheduledStart).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
                      </div>
                    </div>
                    <div className="flex items-center gap-3">
                      <span className="material-symbols-outlined text-[#e82127] text-xl">directions_car</span>
                      <div>
                        <p className="text-[8px] text-gray-500 uppercase font-black tracking-widest">Car</p>
-                       <p className="text-sm font-bold">{res.vehicles?.model}</p>
+                       <p className="text-sm font-bold">{res.vehicleModel || 'Tesla Model 3'}</p>
                      </div>
                    </div>
                    <div className="flex items-center gap-3">
-                     <span className="material-symbols-outlined text-[#e82127] text-xl">pin</span>
+                     <span className="material-symbols-outlined text-[#e82127] text-xl">bolt</span>
                      <div>
-                       <p className="text-[8px] text-gray-500 uppercase font-black tracking-widest">Plate</p>
-                       <p className="text-sm font-bold">{res.vehicles?.license_plate}</p>
+                       <p className="text-[8px] text-gray-500 uppercase font-black tracking-widest">Connector</p>
+                       <p className="text-sm font-bold">{res.connectorType}</p>
                      </div>
                    </div>
                  </div>
 
                  {res.status === 'CONFIRMED' && (
                    <div className="flex gap-3">
-                     <button className="flex-1 bg-white/5 border border-white/5 py-3.5 text-white text-[10px] font-black uppercase tracking-[0.2em] rounded-xl hover:bg-white/10 transition-colors active:scale-95">
-                       Détails
+                     <button
+                       onClick={() => handleReportIssue(res.id)}
+                       className="flex-1 bg-white/5 border border-white/5 py-3.5 text-white text-[10px] font-black uppercase tracking-[0.2em] rounded-xl hover:bg-white/10 transition-colors active:scale-95"
+                     >
+                       Signaler
                      </button>
-                     <button 
+                     <button
                        onClick={() => handleCancel(res.id)}
                        className="flex-1 bg-[#e82127] py-3.5 text-white text-[10px] font-black uppercase tracking-[0.2em] rounded-xl hover:bg-red-700 transition-colors active:scale-95 shadow-lg shadow-[#e82127]/20"
                      >
@@ -157,6 +171,7 @@ const Reservations: React.FC = () => {
           <div className="py-20 text-center">
             <span className="material-symbols-outlined text-gray-700 text-6xl mb-4">calendar_today</span>
             <p className="text-gray-500 font-medium italic">Aucune réservation pour le moment.</p>
+            <p className="text-gray-600 text-sm mt-2">Réservez une borne de recharge pour commencer.</p>
           </div>
         )}
       </div>

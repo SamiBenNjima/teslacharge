@@ -24,6 +24,10 @@ public class Reservation {
     private Station station;
 
     @ManyToOne
+    @JoinColumn(name = "connector_id", nullable = false)
+    private Connector connector;
+
+    @ManyToOne
     @JoinColumn(name = "vehicle_id")
     private Vehicle vehicle;
 
